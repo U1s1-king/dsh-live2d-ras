@@ -12,6 +12,7 @@
  */
 import type { Context } from '@deepseek-ai/cordis'
 import { initWidget } from './waifu/index.js'
+import waifuCss from './waifuCss.js'
 
 /** vendor 运行时脚本（host 同源路由，按依赖顺序加载）。
  *  Cubism 2.1 渲染链：live2d.min.js（框架，暴露 window.Live2D / Live2DModelWebGL）
@@ -27,9 +28,9 @@ const VENDOR_SCRIPTS = [
 
 /** 桌宠容器与面板的 z-index 覆盖（dsh GUI 上方悬浮）+ 默认放右下（避开左侧栏）。 */
 const Z_INDEX_OVERRIDE = `
-#waifu, #waifu-toggle { z-index: 2147483646 !important; }
+#waifu-ras, #waifu-toggle-ras { z-index: 2147483646 !important; }
 .waifu-panel { z-index: 2147483647 !important; }
-#waifu { left: auto; right: 20px; top: 20px; bottom: auto; }
+#waifu-ras { left: auto; right: 900px; top: auto; bottom: 20px; }
 `
 
 function loadScript(src: string): Promise<void> {
@@ -58,18 +59,12 @@ export function apply(ctx: Context): void {
       cleanup.length = 0
     }
 
-    // 1) 桌宠样式（同源路由拉取 + 高 z-index 覆盖）
-    fetch('/ras-assets/waifu.css')
-      .then((res) => (res.ok ? res.text() : Promise.reject(new Error(`HTTP ${res.status}`))))
-      .then((css) => {
-        if (disposed) return
-        const style = document.createElement('style')
-        style.id = 'live2d-roselia-css'
-        style.textContent = css + Z_INDEX_OVERRIDE
-        document.head.appendChild(style)
-        cleanup.push(() => style.remove())
-      })
-      .catch((error) => console.error('[live2d-roselia] 样式加载失败', error))
+    // 1) 桌宠样式（构建期内联进 bundle，避免运行时 fetch 的缓存/时序问题）
+    const style = document.createElement('style')
+    style.id = 'live2d-ras-css'
+    style.textContent = waifuCss + Z_INDEX_OVERRIDE
+    document.head.appendChild(style)
+    cleanup.push(() => style.remove())
 
     // 2) 运行时脚本按序加载 → 3) 启动桌宠
     ;(async () => {
@@ -85,10 +80,10 @@ export function apply(ctx: Context): void {
           tools: ['switch-model', 'photo', 'info', 'quit'],
         })
       } catch (error) {
-        console.error('[live2d-roselia] 桌宠启动失败', error)
+        console.error('[live2d-ras] 桌宠启动失败', error)
       }
     })()
 
     return stop
-  }, 'live2d-roselia: widget')
+  }, 'live2d-ras: widget')
 }

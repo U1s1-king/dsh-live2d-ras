@@ -107,7 +107,7 @@ const tips = {
   },
   "mouseover": [
     {
-      "selector": "#waifu-tool-switch-model",
+      "selector": "#waifu-tool-ras-switch-model",
       "text": [
         { "text": "想听听其他成员的声音吗？", "motion": "smile02" },
         { "text": "换人？好呀，大家都很棒！", "motion": "smile01" },
@@ -117,7 +117,7 @@ const tips = {
       ]
     },
     {
-      "selector": "#waifu-tool-photo",
+      "selector": "#waifu-tool-ras-photo",
       "text": [
         { "text": "拍照？要把这一刻的笑容留住。", "motion": "smile02" },
         { "text": "拍照！摆个最元气的姿势！", "motion": "kime01" },
@@ -127,7 +127,7 @@ const tips = {
       ]
     },
     {
-      "selector": "#waifu-tool-info",
+      "selector": "#waifu-tool-ras-info",
       "text": [
         { "text": "想了解 RAISE A SUILEN 吗？", "motion": "smile01" },
         { "text": "关于我们？那可有好多好玩的！", "motion": "smile02" },
@@ -137,7 +137,7 @@ const tips = {
       ]
     },
     {
-      "selector": "#waifu-tool-quit",
+      "selector": "#waifu-tool-ras-quit",
       "text": [
         { "text": "要走了吗？下次 Live 记得来哦。", "motion": "smile01" },
         { "text": "拜拜！我会继续练习的！", "motion": "bye01" },

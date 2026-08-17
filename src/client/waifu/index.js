@@ -39,22 +39,22 @@ function createHooks() {
 
 async function loadWidget(hooks) {
     document.body.insertAdjacentHTML("beforeend", `
-    <div id="waifu">
-      <canvas id="live2d" width="800" height="800"></canvas>
-      <div id="waifu-tips"></div>
-      <div id="waifu-tool"></div>
+    <div id="waifu-ras">
+      <canvas id="live2d-ras" width="800" height="800"></canvas>
+      <div id="waifu-tips-ras"></div>
+      <div id="waifu-tool-ras"></div>
     </div>
-    <div id="model-selection-panel" class="waifu-panel" style="display: none;"></div>
-    <div id="texture-selection-panel" class="waifu-panel" style="display: none;"></div>`);
+    <div id="model-selection-panel-ras" class="waifu-panel waifu-panel-ras" style="display: none;"></div>
+    <div id="texture-selection-panel-ras" class="waifu-panel waifu-panel-ras" style="display: none;"></div>`);
 
     const model = new Model();
     localStorage.removeItem("ras-waifu-display");
-    sessionStorage.removeItem("waifu-text");
+    sessionStorage.removeItem("ras-waifu-text");
 
-    const waifu = document.getElementById("waifu");
-    const toolBar = document.getElementById("waifu-tool");
-    const modelPanel = document.getElementById("model-selection-panel");
-    const texturePanel = document.getElementById("texture-selection-panel");
+    const waifu = document.getElementById("waifu-ras");
+    const toolBar = document.getElementById("waifu-tool-ras");
+    const modelPanel = document.getElementById("model-selection-panel-ras");
+    const texturePanel = document.getElementById("texture-selection-panel-ras");
     let selectedModelIndex = null;
 
     // 面板滚动防抢：capture 阶段拦截 wheel 事件，阻止冒泡到 dsh GUI 的滚动处理层；
@@ -117,8 +117,8 @@ async function loadWidget(hooks) {
         if (!tools[tool]) continue;
         const { icon, callback } = tools[tool];
         toolBar.insertAdjacentHTML("beforeend",
-            `<span id="waifu-tool-${tool}" title="${TOOL_TITLES[tool] || tool}">${decodeURIComponent(icon).replace("data:image/svg+xml,", "")}</span>`);
-        document.getElementById(`waifu-tool-${tool}`).addEventListener("click", callback);
+            `<span id="waifu-tool-ras-${tool}" title="${TOOL_TITLES[tool] || tool}">${decodeURIComponent(icon).replace("data:image/svg+xml,", "")}</span>`);
+        document.getElementById(`waifu-tool-ras-${tool}`).addEventListener("click", callback);
     }
 
     /* ---------- 角色选择面板 ---------- */
@@ -199,10 +199,10 @@ async function loadWidget(hooks) {
 
     /* ---------- 点击空白处关闭面板 ---------- */
     hooks.on(document, "click", event => {
-        if (event.target.closest("#model-selection-panel") ||
-            event.target.closest("#texture-selection-panel") ||
-            event.target.closest("#waifu-tool") ||
-            event.target.closest("#waifu-toggle")) {
+        if (event.target.closest("#model-selection-panel-ras") ||
+            event.target.closest("#texture-selection-panel-ras") ||
+            event.target.closest("#waifu-tool-ras") ||
+            event.target.closest("#waifu-toggle-ras")) {
             return;
         }
         closePanels();
@@ -256,9 +256,9 @@ function enableDrag(widgetEl) {
     const drag = { active: false, moved: false, startX: 0, startY: 0, originX: 0, originY: 0 };
 
     widgetEl.addEventListener("pointerdown", event => {
-        if (event.target.closest("#waifu-tool") ||
-            event.target.closest(".waifu-panel") ||
-            event.target.closest("#waifu-toggle")) {
+        if (event.target.closest("#waifu-tool-ras") ||
+            event.target.closest(".waifu-panel-ras") ||
+            event.target.closest("#waifu-toggle-ras")) {
             return;
         }
         drag.active = true;
@@ -354,7 +354,7 @@ function registerEventListener(model, drag, hooks) {
     }, 1000);
 
     hooks.on(window, "mouseover", event => {
-        if (event.target.closest("#live2d")) {
+        if (event.target.closest("#live2d-ras")) {
             showMessage(model, getMessageArray(), 4000, 9);
             return;
         }
@@ -368,7 +368,7 @@ function registerEventListener(model, drag, hooks) {
     });
     hooks.on(window, "click", event => {
         if (drag.moved) return;
-        if (event.target.closest("#live2d")) {
+        if (event.target.closest("#live2d-ras")) {
             showMessage(model, getMessageArray(), 4000, 9);
             return;
         }
@@ -403,10 +403,10 @@ function registerEventListener(model, drag, hooks) {
 async function initWidget(config) {
     const hooks = createHooks();
     setConfig(config);
-    document.getElementById("waifu-toggle")?.remove();
-    document.getElementById("waifu")?.remove();
-    document.body.insertAdjacentHTML("beforeend", `<div id="waifu-toggle"><span>Live2D</span></div>`);
-    const toggle = document.getElementById("waifu-toggle");
+    document.getElementById("waifu-toggle-ras")?.remove();
+    document.getElementById("waifu-ras")?.remove();
+    document.body.insertAdjacentHTML("beforeend", `<div id="waifu-toggle-ras"><span>Live2D</span></div>`);
+    const toggle = document.getElementById("waifu-toggle-ras");
     let stopWidget = () => { };
     const toggleStop = () => {
         hooks.stop();
@@ -420,7 +420,7 @@ async function initWidget(config) {
             toggle.removeAttribute("first-time");
         } else {
             localStorage.removeItem("ras-waifu-display");
-            const waifuEl = document.getElementById("waifu");
+            const waifuEl = document.getElementById("waifu-ras");
             if (waifuEl) {
                 waifuEl.style.display = "";
                 setTimeout(() => { waifuEl.style.bottom = "20px"; }, 0);

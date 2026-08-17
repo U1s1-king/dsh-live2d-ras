@@ -3,8 +3,8 @@ function readStoredId(key) {
     return Number.isNaN(value) || value < 0 ? null : value;
 }
 
-let modelId = readStoredId("modelId");
-let modelTexturesId = readStoredId("modelTexturesId");
+let modelId = readStoredId("ras-modelId");
+let modelTexturesId = readStoredId("ras-modelTexturesId");
 let config = {};
 let messageArray = [];
 
@@ -17,7 +17,7 @@ export function getModelId() {
 
 export function setModelId(newModelId) {
     modelId = newModelId;
-    localStorage.setItem("modelId", newModelId.toString());
+    localStorage.setItem("ras-modelId", newModelId.toString());
 }
 
 export function getModelTexturesId() {
@@ -29,14 +29,14 @@ export function getModelTexturesId() {
 
 export function setModelTexturesId(newModelTexturesId) {
     modelTexturesId = newModelTexturesId;
-    localStorage.setItem("modelTexturesId", newModelTexturesId.toString());
+    localStorage.setItem("ras-modelTexturesId", newModelTexturesId.toString());
 }
 
 export function resetModelState() {
     modelId = 0;
     modelTexturesId = 0;
-    localStorage.setItem("modelId", "0");
-    localStorage.setItem("modelTexturesId", "0");
+    localStorage.setItem("ras-modelId", "0");
+    localStorage.setItem("ras-modelTexturesId", "0");
 }
 
 export function getConfig() {
